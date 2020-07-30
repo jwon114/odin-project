@@ -2,8 +2,6 @@ require './board'
 
 RSpec.describe Board do
   let (:board) { described_class.new }
-  let (:player_one) { instance_double(Player, name: 'james', mark: instance_double(Mark, type: 'x')) }
-  let (:player_two) { instance_double(Player, name: 'thomas', mark: instance_double(Mark, type: 'o')) }
 
   describe '#initialize' do
     it 'has 9 tiles' do
@@ -11,31 +9,37 @@ RSpec.describe Board do
     end
   end
 
-  describe '#place' do
-    it 'can place a mark on an empty tile for player one' do
-      board.place(player_one, 0)
+  describe '#place_mark' do
+    it 'can update the board with position and mark' do
+      board.place_mark(0, 'x')
       expect(board.tiles).to eq(['x', nil, nil, nil, nil, nil, nil, nil, nil])
     end
 
-    it 'can place a mark on an empty tile for player two' do
-      board.place(player_two, 3)
-      expect(board.tiles).to eq([nil, nil, nil, 'o', nil, nil, nil, nil, nil])
+    it 'cannot place a mark on a non empty tile for player one' do
+      board.instance_variable_set(:@tiles, ['x', nil, nil, nil, nil, nil, nil, nil, nil])
+      expect(board.place_mark(0, 'x')).to eq('Not an empty tile')
     end
   end
 
-  describe '#winner?' do
-    it 'has ended the game with a winner' do
-      board.instance_variable_set(:@tiles, ['x', 'x', 'x', nil, nil, nil, nil, nil, nil])
-      expect(board.winner?(player_one)).to eq(player_one)
+  describe '#valid_placement?' do
+    it 'has no mark' do
+      expect(board.valid_placement?(0)).to be_truthy
     end
 
-    it 'has not ended the game' do
-      expect(board.winner?(player_one)).to be_nil
+    it 'has a mark' do
+      board.instance_variable_set(:@tiles, ['x', nil, nil, nil, nil, nil, nil, nil, nil])
+      expect(board.valid_placement?(0)).to be_falsey
+    end
+  end
+
+  describe '#render' do
+    it 'can draw the board empty' do
+      expect { board.render }.to output(" #{nil} | #{nil} | #{nil} \n--------\n #{nil} | #{nil} | #{nil} \n--------\n #{nil} | #{nil} | #{nil} \n").to_stdout
     end
 
-    it 'has ended in a draw' do
+    it 'can draw the board with marks' do
       board.instance_variable_set(:@tiles, ['x','o','x','o','o','x','x','x','o'])
-      expect(board.winner?(player_one)).to be_nil
+      expect { board.render }.to output(" x | o | x \n--------\n o | o | x \n--------\n x | x | o \n").to_stdout
     end
   end
 end

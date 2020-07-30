@@ -1,8 +1,8 @@
 require './player'
+require './board'
 
 RSpec.describe Player do
-  let (:mark) { instance_double(Mark, type: 'x') }
-  let (:player_one) { described_class.new('james', mark) }
+  let (:player_one) { described_class.new('james', 'x') }
 
   describe '#initialize' do
     it 'has a name' do
@@ -10,7 +10,7 @@ RSpec.describe Player do
     end
 
     it 'has a mark' do
-      expect(player_one.mark.type).to eq('x')
+      expect(player_one.mark).to eq('x')
     end
   end
 end
