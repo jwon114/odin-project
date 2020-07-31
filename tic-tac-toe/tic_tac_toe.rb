@@ -48,6 +48,7 @@ class TicTacToe
       end
 
       if draw?
+        board.render
         puts "It's a draw!"
         break
       end
