@@ -32,6 +32,7 @@ RSpec.describe TicTacToe do
 
     it 'adds players one and sets the initial turn' do
       tic_tac_toe.add_player('james')
+      # binding.pry
       expect(tic_tac_toe.player_turn).to be_an_instance_of(Player)
       expect(tic_tac_toe.player_turn).to have_attributes(name: 'james')
     end
@@ -111,9 +112,10 @@ RSpec.describe TicTacToe do
     end
 
     it 'requests player for a move and it is invalid' do
+      tic_tac_toe.instance_variable_set(:@players, [player_two, player_one])
       tic_tac_toe.instance_variable_set(:@player_turn, player_two)
       allow(tic_tac_toe).to receive(:gets).and_return('10')
-      expect { tic_tac_toe.request_move }.to output("Your move #{player_two.name}!\nNot a valid move!\n").to_stdout
+      expect { tic_tac_toe.request_move }.to output("Your move #{player_two.name}!\nNot a valid move!\n #{nil}  | #{nil}  | #{nil}  \n-----------\n #{nil}  | #{nil}  | #{nil}  \n-----------\n #{nil}  | #{nil}  | #{nil}  \n").to_stdout
     end
   end
 

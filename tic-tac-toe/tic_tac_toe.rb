@@ -18,10 +18,10 @@ class TicTacToe
   end
 
   def add_player(name)
-    type = @players.empty? ? 'x' : 'o'
+    type = players.empty? ? 'x' : 'o'
     new_player = Player.new(name, type)
-    @players << new_player
-    @player_turn = new_player if type == 'x'
+    self.players << new_player
+    self.player_turn = new_player if type == 'x'
   end
 
   def play
@@ -37,12 +37,13 @@ class TicTacToe
     add_player(name)
 
     loop do
-      @board.render
+      board.render
       position = request_move
-      @board.place_mark(position, @player_turn.mark)
+      board.place_mark(position, player_turn.mark)
       
       if winner?
-        puts "#{@player_turn.name} wins!"
+        board.render
+        puts "#{player_turn.name} wins!"
         break
       end
 
@@ -56,38 +57,37 @@ class TicTacToe
   end
 
   def switch_player_turn
-    @players = @players.rotate
-    @player_turn = @players.first
+    self.players.rotate!
+    self.player_turn = self.players.first
   end
 
   def winner?
     WIN_COMBINATIONS.find do |indices|
-      values = @board.tiles.values_at(*indices)
-      values.all?(@player_turn.mark)
+      values = board.tiles.values_at(*indices)
+      values.all?(player_turn.mark)
     end
   end
 
   def draw?
-    @board.tiles.count(nil).zero?
+    board.tiles.count(nil).zero?
   end
 
   def request_move
     loop do
-      # binding.pry
-      puts "Your move #{@player_turn.name}!"
+      puts "Your move #{player_turn.name}!"
       move = gets.chomp
       if valid_move?(move)
         return move.to_i
       else
-        @board.render
         puts "Not a valid move!"
-        puts @players.first.name
+        board.render
       end
-      # binding.pry
     end
   end
 
   private
+
+  attr_writer :players, :player_turn
 
   def valid_move?(move)
     move.to_i.between?(0, 8) && @board.valid_placement?(move.to_i)

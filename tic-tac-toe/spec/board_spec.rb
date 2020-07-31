@@ -33,13 +33,13 @@ RSpec.describe Board do
   end
 
   describe '#render' do
-    it 'can draw the board empty' do
-      expect { board.render }.to output(" #{nil} | #{nil} | #{nil} \n--------\n #{nil} | #{nil} | #{nil} \n--------\n #{nil} | #{nil} | #{nil} \n").to_stdout
+    it 'can draw the board empty' do 
+      expect { board.render }.to output("  #{nil} | #{nil}  | #{nil}  \n-----------\n #{nil}  | #{nil}  | #{nil}  \n-----------\n #{nil}  | #{nil}  | #{nil}  \n").to_stdout
     end
 
     it 'can draw the board with marks' do
       board.instance_variable_set(:@tiles, ['x','o','x','o','o','x','x','x','o'])
-      expect { board.render }.to output(" x | o | x \n--------\n o | o | x \n--------\n x | x | o \n").to_stdout
+      expect { board.render }.to output(" x | o | x \n-----------\n o | o | x \n-----------\n x | x | o \n").to_stdout
     end
   end
 end
